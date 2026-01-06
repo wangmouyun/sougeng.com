@@ -270,12 +270,28 @@ let memesData = [];
 
 async function loadMemes() {
     try {
+        // 这里模拟获取数据
         const res = await fetch('https://sougeng.com/data.json');
         if (!res.ok) throw new Error('Network Error');
         memesData = await res.json();
+        
+        // 核心修改：在显示前进行随机排序
+        shuffleMemes(memesData); 
+        
         displayHotMemes();
     } catch (err) {
         document.getElementById('hotMemes').innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #ff4757;">暂时无法获取梗数据，请稍后再试。</p>`;
+    }
+}
+
+/**
+ * 核心功能：洗牌算法 (Fisher-Yates Shuffle)
+ * 能够高效且均匀地打乱数组
+ */
+function shuffleMemes(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
 }
 
@@ -283,9 +299,11 @@ function displayHotMemes() {
     const grid = document.getElementById('hotMemes');
     grid.innerHTML = '';
     
+    // 随机打乱后，取前 12 条展示
     const hot = memesData.slice(0, 12);
+    
     hot.forEach(m => {
-        const card = document.createElement('article'); // 使用 article 标签更有利于 SEO
+        const card = document.createElement('article');
         card.className = 'card';
         card.onclick = () => window.location.href = `/${m.id}`;
         card.innerHTML = `
@@ -294,7 +312,7 @@ function displayHotMemes() {
                 <p>${m.desc}</p>
             </div>
             <div class="card-footer">
-                <span class="tag">🔥 ${m.hot}℃</span>
+                <span class="tag">🎲 随机推荐</span>
                 <span style="font-size: 0.8rem; color: #a4b0be;">详解 →</span>
             </div>
         `;
@@ -302,6 +320,7 @@ function displayHotMemes() {
     });
 }
 
+// 搜索功能保持不变...
 function searchMeme() {
     const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
     if (!keyword) return;
