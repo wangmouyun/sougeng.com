@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>词条加载中 - 搜梗 SOUGENG</title>
+    <title>词条加载中 - 搜梗</title>
     <meta name="description" content="正在为你解码最新的网络流行语含义及出处。">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="搜梗 SOUGENG">
+    <link rel="canonical" href="https://sougeng.com/">
     
     <style>
         :root {
@@ -13,24 +16,26 @@
             --secondary: #5352ed;
             --bg: #f0f2f5;
             --card: #ffffff;
-            --text: #2d3436;
-            --text-light: #636e72;
+            --text: #1c1c1e; /* iOS 典型深色文字 */
+            --text-light: #8e8e93; /* iOS 典型灰色文字 */
+            --ios-gray: #f2f2f7;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             background-color: var(--bg);
             color: var(--text);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* 头部：保持首页的通透渐变 */
         header {
             background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-            padding: 5rem 1rem 6rem;
+            padding: 5rem 1rem 6.5rem;
             text-align: center;
             color: white;
             position: relative;
@@ -50,49 +55,51 @@
 
         .back-btn {
             position: absolute;
-            top: 20px;
+            top: 25px;
             left: 20px;
             z-index: 100;
             color: white;
             text-decoration: none;
             background: rgba(255,255,255,0.2);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 50px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
             transition: 0.3s;
         }
 
         .back-btn:hover {
             background: rgba(255,255,255,0.3);
-            transform: translateX(-5px);
+            transform: translateX(-3px);
         }
 
         header h1 {
-            font-size: 3rem;
+            font-size: 2.8rem;
             margin: 0;
             font-weight: 800;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            letter-spacing: -1px;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .category-tag {
             display: inline-block;
             margin-top: 15px;
             background: var(--primary);
-            padding: 5px 15px;
+            padding: 6px 18px;
             border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(255, 71, 87, 0.35);
         }
 
-        /* 主体内容卡片 */
+        /* 主体内容卡片 (iOS 风格微调) */
         main {
             flex: 1;
-            max-width: 800px;
-            margin: -3rem auto 3rem;
-            padding: 0 1.5rem;
+            max-width: 720px;
+            margin: -4rem auto 4rem;
+            padding: 0 1.2rem;
             width: 100%;
             box-sizing: border-box;
             z-index: 20;
@@ -100,22 +107,24 @@
 
         .detail-card {
             background: var(--card);
-            border-radius: 30px;
+            border-radius: 35px; /* iOS 大圆角 */
             padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.02);
+            box-shadow: 0 25px 55px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255,255,255,0.7);
         }
 
         .info-section {
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
         .info-section h3 {
             color: var(--secondary);
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 18px;
             display: flex;
             align-items: center;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .info-section h3::before {
@@ -123,60 +132,65 @@
             width: 4px;
             height: 18px;
             background: var(--primary);
-            margin-right: 10px;
-            border-radius: 4px;
+            margin-right: 12px;
+            border-radius: 10px;
         }
 
         .desc-text {
-            font-size: 1.15rem;
-            line-height: 1.8;
+            font-size: 1.2rem;
+            line-height: 1.75;
             color: var(--text);
             white-space: pre-wrap;
+            font-weight: 400;
         }
 
-        /* 数据统计条 */
+        /* 数据统计条 (iOS 列表感) */
         .stats-bar {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             margin-top: 40px;
-            padding-top: 25px;
-            border-top: 1px dashed #eee;
+            padding-top: 30px;
+            border-top: 1px solid var(--ios-gray);
         }
 
         .stat-item {
             flex: 1;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 15px;
+            background: var(--ios-gray);
+            padding: 16px;
+            border-radius: 20px;
             text-align: center;
+            transition: transform 0.2s;
         }
 
         .stat-label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-light);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
         .stat-value {
             font-weight: 800;
             color: var(--secondary);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
         }
 
-        /* 骨架屏动画 */
+        /* 骨架屏动画微调 */
         .skeleton-text {
-            height: 20px;
-            background: #eee;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            animation: pulse 1.5s infinite;
+            height: 22px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            animation: shimmer 1.5s infinite linear;
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         footer {
@@ -190,19 +204,21 @@
             color: var(--text-light);
             font-size: 0.9rem;
             margin: 5px 0;
+            font-weight: 500;
         }
 
         @media (max-width: 600px) {
-            header h1 { font-size: 2rem; }
-            .detail-card { padding: 30px 20px; }
+            header h1 { font-size: 2.2rem; }
+            .detail-card { padding: 30px 22px; }
             .stats-bar { flex-direction: column; }
+            .stat-item { padding: 12px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="/" class="back-btn">← 返回首页</a>
+    <a href="/" class="back-btn">← 发现</a>
     <h1 id="memeTitle">...</h1>
     <div id="memeCategory" class="category-tag">加载中</div>
 </header>
@@ -211,7 +227,7 @@
     <article class="detail-card">
         <div id="loadingUI">
             <div class="skeleton-text" style="width: 30%"></div>
-            <div class="skeleton-text" style="width: 100%"></div>
+            <div class="skeleton-text" style="width: 100%; height: 80px;"></div>
             <div class="skeleton-text" style="width: 90%"></div>
             <div class="skeleton-text" style="width: 40%"></div>
         </div>
@@ -227,6 +243,10 @@
                     <span class="stat-label">热度指数</span>
                     <span id="memeHot" class="stat-value">0</span>
                 </div>
+                <div class="stat-item">
+                    <span class="stat-label">百科索引</span>
+                    <span id="displayId" class="stat-value"># 0</span>
+                </div>
             </div>
         </div>
     </article>
@@ -234,7 +254,7 @@
 
 <footer>
     <p>© 2026 搜梗 SOUGENG.COM</p>
-    <p style="font-size: 0.7rem; opacity: 0.6;">让每一个有趣的梗都有迹可循</p>
+    <p style="font-size: 0.75rem; opacity: 0.5; letter-spacing: 1px;">让每一个有趣的梗都有迹可循</p>
 </footer>
 
 <script>
@@ -243,17 +263,17 @@ async function loadDetail() {
     const path = window.location.pathname;
     const id = path.split('/').filter(Boolean).pop();
 
-    if (!id || id === 'index.html' || id === 'detail.html') {
+    if (!id || id === 'index.html' || id === '404.html') {
         showError("未找到指定词条");
         return;
     }
 
     try {
-        const res = await fetch('https://sougeng.com/data.json');
+        // 使用相对路径获取数据，适配 GitHub Pages 部署环境
+        const res = await fetch('/data.json');
         if (!res.ok) throw new Error('Fetch Error');
         const data = await res.json();
         
-        // 2. 匹配对应 ID 的数据
         const meme = data.find(m => m.id.toString() === id);
 
         if (meme) {
@@ -267,34 +287,49 @@ async function loadDetail() {
 }
 
 function renderPage(m) {
-    // 更新内容渲染
+    // 更新页面内容
     document.getElementById('memeTitle').innerText = m.title;
     document.getElementById('memeCategory').innerText = m.category || "网络热梗";
     document.getElementById('memeDesc').innerText = m.desc;
     document.getElementById('displayId').innerText = `# ${m.id}`;
     document.getElementById('memeHot').innerText = `${m.hot || 99} ℃`;
 
-    // 动态修改 SEO 标签
-    document.title = `${m.title} 是什么梗？含义及出处 - 搜梗 SOUGENG`;
+    // --- SEO 深度优化 ---
+    const pageTitle = `${m.title}是什么梗？${m.title}的意思、含义解析 - 搜梗 SOUGENG`;
+    const pageDesc = `${m.title}的意思是：${m.desc.substring(0, 120)}... 更多网络流行语解析尽在搜梗百科。`;
+    
+    document.title = pageTitle;
+    
+    // 更新 Description
     const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute("content", `${m.title}的意思是：${m.desc.substring(0, 100)}...`);
+    if (metaDesc) metaDesc.setAttribute("content", pageDesc);
+    
+    // 更新 Open Graph (社交分享优化)
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if(ogTitle) ogTitle.setAttribute("content", pageTitle);
+    if(ogDesc) ogDesc.setAttribute("content", pageDesc);
 
-    // 切换 UI
+    // 更新 Canonical URL
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if(canonical) canonical.setAttribute("href", window.location.href);
+
+    // 切换 UI 显示
     document.getElementById('loadingUI').style.display = 'none';
     document.getElementById('contentUI').style.display = 'block';
 }
 
 function showError(msg) {
     document.getElementById('loadingUI').innerHTML = `
-        <div style="text-align: center; padding: 20px;">
-            <p style="font-size: 3rem;">😅</p>
-            <p style="color: var(--text-light);">${msg}</p>
-            <a href="/" style="color: var(--secondary); font-weight: bold;">返回首页搜索</a>
+        <div style="text-align: center; padding: 40px 20px;">
+            <p style="font-size: 3.5rem; margin: 0 0 15px 0;">🔎</p>
+            <p style="color: var(--text-light); font-weight: 600; font-size: 1.1rem;">${msg}</p>
+            <a href="/" style="display: inline-block; margin-top: 20px; color: var(--secondary); text-decoration: none; font-weight: 700; border: 2px solid var(--secondary); padding: 8px 24px; border-radius: 15px;">返回首页搜搜看</a>
         </div>
     `;
 }
 
-// 执行加载
+// 启动加载
 loadDetail();
 </script>
 
