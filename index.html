@@ -283,7 +283,7 @@ function displayHotMemes() {
     const grid = document.getElementById('hotMemes');
     grid.innerHTML = '';
     
-    const hot = memesData.slice(0, 10);
+    const hot = memesData.slice(0, 12);
     hot.forEach(m => {
         const card = document.createElement('article'); // 使用 article 标签更有利于 SEO
         card.className = 'card';
