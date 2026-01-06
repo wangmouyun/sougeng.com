@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>搜梗网 sougeng.com</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --ios-bg: #F2F2F7;
+            --ios-card: rgba(255, 255, 255, 0.8);
+        }
+        body {
+            background-color: var(--ios-bg);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* iOS 典型的毛玻璃效果 */
+        .glass-morphism {
+            background: var(--ios-card);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ios-shadow {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        /* 隐藏滚动条 */
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div class="fixed top-0 left-0 right-0 p-6 flex justify-between items-center z-50">
+        <a href="/" class="text-xl font-semibold tracking-tight text-black">搜梗<span class="text-blue-500">.com</span></a>
+        <div id="loading-spinner" class="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+
+    <div id="meme-card-container" class="w-full max-w-md hidden">
+        <div class="glass-morphism rounded-[32px] p-8 ios-shadow">
+            <div class="flex items-center justify-between mb-6">
+                <span id="meme-id" class="text-xs font-mono font-medium text-gray-400 uppercase tracking-widest">ID #000</span>
+                <span id="meme-tag" class="bg-blue-100 text-blue-600 text-[11px] font-bold px-3 py-1 rounded-full uppercase">NEW</span>
+            </div>
+            
+            <h1 id="meme-title" class="text-3xl font-bold text-gray-900 mb-4 tracking-tight">加载中...</h1>
+            <div class="h-[1px] w-full bg-gray-200/50 mb-6"></div>
+            <p id="meme-desc" class="text-lg text-gray-600 leading-relaxed font-medium">
+                正在为您检索互联网记忆...
+            </p>
+
+            <div class="mt-10 flex items-center justify-between">
+                <div class="flex flex-col">
+                    <span class="text-[10px] text-gray-400 uppercase font-bold">Hot Score</span>
+                    <span id="meme-hot" class="text-orange-500 font-bold text-lg">--</span>
+                </div>
+                <button onclick="window.location.href='/'" class="bg-blue-500 text-white px-6 py-3 rounded-2xl font-semibold active:scale-95 transition-transform shadow-lg shadow-blue-200">
+                    返回首页
+                </button>
+            </div>
+        </div>
+        <p class="text-center mt-8 text-gray-400 text-sm font-medium">SOUGENG.COM - 梗百科</p>
+    </div>
+
+    <div id="error-container" class="hidden text-center">
+        <h2 class="text-6xl mb-4">🧩</h2>
+        <p class="text-gray-500 font-medium">此梗已超出服务区或 ID 无效</p>
+        <a href="/" class="mt-6 inline-block text-blue-500 font-semibold">回主页看看</a>
+    </div>
+
+    <script>
+        const API_URL = 'https://sougeng.com/data.json';
+
+        async function fetchAndShowMeme() {
+            const spinner = document.getElementById('loading-spinner');
+            const card = document.getElementById('meme-card-container');
+            const errorView = document.getElementById('error-container');
+
+            // 1. 获取路径中的 ID (例如 /102)
+            const path = window.location.pathname;
+            const id = path.split('/').pop();
+
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                // 2. 匹配 ID
+                const meme = data.find(item => item.id.toString() === id);
+
+                if (meme) {
+                    // 3. 渲染数据
+                    document.getElementById('meme-id').innerText = `ID #${meme.id.toString().padStart(3, '0')}`;
+                    document.getElementById('meme-tag').innerText = meme.category || '综合';
+                    document.getElementById('meme-title').innerText = meme.title;
+                    document.getElementById('meme-desc').innerText = meme.desc;
+                    document.getElementById('meme-hot').innerText = `🔥 ${meme.hot || '99+'}`;
+                    
+                    spinner.classList.add('hidden');
+                    card.classList.remove('hidden');
+                    document.title = `${meme.title} - 搜梗网`;
+                } else {
+                    throw new Error('Meme not found');
+                }
+            } catch (err) {
+                spinner.classList.add('hidden');
+                errorView.classList.remove('hidden');
+            }
+        }
+
+        window.onload = fetchAndShowMeme;
+    </script>
+</body>
+</html>
