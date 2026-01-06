@@ -1,119 +1,309 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>梗展示</title>
-<style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f6f8fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    flex-direction: column;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>词条加载中 - 搜梗 SOUGENG</title>
+    <meta name="description" content="正在为你解码最新的网络流行语含义及出处。">
+    
+    <style>
+        :root {
+            --primary: #ff4757;
+            --secondary: #5352ed;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #2d3436;
+            --text-light: #636e72;
+        }
 
-  .card {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
-    text-align: center;
-    max-width: 400px;
-  }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-  .card h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
+        /* 头部：保持首页的通透渐变 */
+        header {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            padding: 5rem 1rem 6rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
 
-  .card p {
-    font-size: 1.1rem;
-    color: #586069;
-  }
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: var(--bg);
+            border-radius: 50% 50% 0 0;
+        }
 
-  .github-404 {
-    font-family: "Courier New", Courier, monospace;
-    color: #d73a49;
-    font-size: 1.5rem;
-  }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
 
-  .input-box {
-    margin-bottom: 1rem;
-  }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
 
-  input[type="number"] {
-    padding: 0.5rem;
-    font-size: 1rem;
-    width: 100px;
-    border-radius: 6px;
-    border: 1px solid #d1d5da;
-  }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            font-weight: 800;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-  button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    margin-left: 0.5rem;
-    border: none;
-    border-radius: 6px;
-    background-color: #28a745;
-    color: white;
-    cursor: pointer;
-  }
+        .category-tag {
+            display: inline-block;
+            margin-top: 15px;
+            background: var(--primary);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
 
-  button:hover {
-    background-color: #218838;
-  }
-</style>
+        /* 主体内容卡片 */
+        main {
+            flex: 1;
+            max-width: 800px;
+            margin: -3rem auto 3rem;
+            padding: 0 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 20;
+        }
+
+        .detail-card {
+            background: var(--card);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-section h3::before {
+            content: "";
+            width: 4px;
+            height: 18px;
+            background: var(--primary);
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+
+        .desc-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text);
+            white-space: pre-wrap;
+        }
+
+        /* 数据统计条 */
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px dashed #eee;
+        }
+
+        .stat-item {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-weight: 800;
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+
+        /* 骨架屏动画 */
+        .skeleton-text {
+            height: 20px;
+            background: #eee;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        footer {
+            background: #fff;
+            padding: 3rem 1rem;
+            text-align: center;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        footer p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            .detail-card { padding: 30px 20px; }
+            .stats-bar { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="card">
-  <div class="input-box">
-    <input id="idInput" type="number" placeholder="输入 ID">
-    <button onclick="fetchMeme()">获取梗</button>
-  </div>
-  <div id="content"></div>
-</div>
+<header>
+    <a href="/" class="back-btn">← 返回首页</a>
+    <h1 id="memeTitle">...</h1>
+    <div id="memeCategory" class="category-tag">加载中</div>
+</header>
+
+<main>
+    <article class="detail-card">
+        <div id="loadingUI">
+            <div class="skeleton-text" style="width: 30%"></div>
+            <div class="skeleton-text" style="width: 100%"></div>
+            <div class="skeleton-text" style="width: 90%"></div>
+            <div class="skeleton-text" style="width: 40%"></div>
+        </div>
+
+        <div id="contentUI" style="display: none;">
+            <section class="info-section">
+                <h3>词条释义</h3>
+                <div id="memeDesc" class="desc-text"></div>
+            </section>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-label">词条 ID</span>
+                    <span id="displayId" class="stat-value">#</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">热度指数</span>
+                    <span id="memeHot" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">收录状态</span>
+                    <span class="stat-value" style="color: #2ed573;">已认证</span>
+                </div>
+            </div>
+        </div>
+    </article>
+</main>
+
+<footer>
+    <p>© 2026 搜梗 SOUGENG.COM</p>
+    <p style="font-size: 0.7rem; opacity: 0.6;">让每一个有趣的梗都有迹可循</p>
+</footer>
 
 <script>
-async function fetchMeme() {
-  const id = document.getElementById('idInput').value;
-  const contentDiv = document.getElementById('content');
-  contentDiv.innerHTML = "加载中...";
+async function loadDetail() {
+    // 1. 从路径解析 ID (支持 /123 这种格式)
+    const path = window.location.pathname;
+    const id = path.split('/').filter(Boolean).pop();
 
-  try {
-    const res = await fetch('https://sougeng.com/data.json');
-    if (!res.ok) throw new Error('API 请求失败');
-
-    const data = await res.json();
-    const item = data.find(d => d.id === Number(id));
-
-    if (item) {
-      // 找到内容，展示梗
-      contentDiv.innerHTML = `
-        <h1>${item.title}</h1>
-        <p>${item.desc}</p>
-      `;
-    } else {
-      // 未找到内容，展示 GitHub 404 风格
-      contentDiv.innerHTML = `
-        <pre class="github-404">
-  404
-  Not Found
-
-  The requested meme with ID ${id} does not exist.
-        </pre>
-      `;
+    if (!id || id === 'index.html' || id === 'detail.html') {
+        showError("未找到指定词条");
+        return;
     }
-  } catch (err) {
-    contentDiv.innerHTML = `<pre class="github-404">网络错误: ${err.message}</pre>`;
-  }
+
+    try {
+        const res = await fetch('https://sougeng.com/data.json');
+        if (!res.ok) throw new Error('Fetch Error');
+        const data = await res.json();
+        
+        // 2. 匹配对应 ID 的数据
+        const meme = data.find(m => m.id.toString() === id);
+
+        if (meme) {
+            renderPage(meme);
+        } else {
+            showError("该词条尚未被收录");
+        }
+    } catch (err) {
+        showError("服务器连接失败");
+    }
 }
+
+function renderPage(m) {
+    // 更新内容渲染
+    document.getElementById('memeTitle').innerText = m.title;
+    document.getElementById('memeCategory').innerText = m.category || "网络热梗";
+    document.getElementById('memeDesc').innerText = m.desc;
+    document.getElementById('displayId').innerText = `# ${m.id}`;
+    document.getElementById('memeHot').innerText = `${m.hot || 99} ℃`;
+
+    // 动态修改 SEO 标签
+    document.title = `${m.title} 是什么梗？含义及出处 - 搜梗 SOUGENG`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", `${m.title}的意思是：${m.desc.substring(0, 100)}...`);
+
+    // 切换 UI
+    document.getElementById('loadingUI').style.display = 'none';
+    document.getElementById('contentUI').style.display = 'block';
+}
+
+function showError(msg) {
+    document.getElementById('loadingUI').innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+            <p style="font-size: 3rem;">😅</p>
+            <p style="color: var(--text-light);">${msg}</p>
+            <a href="/" style="color: var(--secondary); font-weight: bold;">返回首页搜索</a>
+        </div>
+    `;
+}
+
+// 执行加载
+loadDetail();
 </script>
 
 </body>
